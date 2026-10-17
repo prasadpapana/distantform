@@ -27,7 +27,7 @@ export const sampleProducts = [
     color: 'Electric Blue',
     colorHex: '#225bff',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    images: [photo('photo-1576566588028-4147f3842f27'), photo('photo-1503342217505-b0a15ec3261c')],
+    images: [photo('photo-1576566588028-4147f3842f27'), photo('photo-1503341504253-dff4815485f1')],
     variantId: 'demo-blue-hour',
   },
   {
@@ -67,7 +67,7 @@ export const sampleProducts = [
     color: 'Stone',
     colorHex: '#c8c1b4',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    images: [photo('photo-1529139574466-a303027c1d8b'), photo('photo-1521572163474-6864f9cf17ab')],
+    images: [photo('photo-1503341504253-dff4815485f1'), photo('photo-1521572163474-6864f9cf17ab')],
     variantId: 'demo-off-grid',
   },
   {
@@ -80,7 +80,7 @@ export const sampleProducts = [
     color: 'Cloud',
     colorHex: '#d9d9d6',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    images: [photo('photo-1503342217505-b0a15ec3261c'), photo('photo-1576566588028-4147f3842f27')],
+    images: [photo('photo-1503341504253-dff4815485f1'), photo('photo-1576566588028-4147f3842f27')],
     variantId: 'demo-good-company',
   },
   {
@@ -107,7 +107,7 @@ export const sampleProducts = [
     color: 'Ink',
     colorHex: '#151c2c',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    images: [photo('photo-1503342217505-b0a15ec3261c'), photo('photo-1576566588028-4147f3842f27')],
+    images: [photo('photo-1503341504253-dff4815485f1'), photo('photo-1576566588028-4147f3842f27')],
     variantId: 'demo-blueprint',
   },
 ]
