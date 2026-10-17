@@ -1,6 +1,6 @@
 const domain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN?.trim()
 const token = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN?.trim()
-const apiVersion = import.meta.env.VITE_SHOPIFY_API_VERSION?.trim() || '2025-01'
+const apiVersion = import.meta.env.VITE_SHOPIFY_API_VERSION?.trim() || '2026-10'
 
 export const shopifyConfigured = Boolean(domain && token)
 
@@ -85,6 +85,41 @@ export async function addCartLine(cartId, variantId, quantity) {
   })
   const result = data[key]
   if (result.userErrors.length) throw new Error(result.userErrors.map((error) => error.message).join(' '))
+  return result.cart
+}
+
+export async function addDeliveryAddress(cartId, address) {
+  const data = await storefrontRequest(
+    `mutation AddGuestDeliveryAddress($cartId: ID!, $addresses: [CartSelectableAddressInput!]!) {
+      cartDeliveryAddressesAdd(cartId: $cartId, addresses: $addresses) {
+        cart { id checkoutUrl }
+        userErrors { message }
+      }
+    }`,
+    {
+      cartId,
+      addresses: [{
+        selected: true,
+        oneTimeUse: true,
+        validationStrategy: 'STRICT',
+        address: {
+          deliveryAddress: {
+            firstName: address.fullName.trim().split(/\s+/)[0],
+            lastName: address.fullName.trim().split(/\s+/).slice(1).join(' '),
+            phone: `+91${address.mobile}`,
+            address1: address.streetAddress.trim(),
+            city: address.city.trim(),
+            provinceCode: address.state,
+            countryCode: 'IN',
+            zip: address.pinCode,
+          },
+        },
+      }],
+    },
+  )
+  const result = data.cartDeliveryAddressesAdd
+  if (result.userErrors.length) throw new Error(result.userErrors.map((error) => error.message).join(' '))
+  if (!result.cart?.checkoutUrl) throw new Error('Shopify did not return a checkout URL. Check your store checkout settings.')
   return result.cart
 }
 

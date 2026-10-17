@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { sampleProducts } from '../data/products'
-import { addCartLine, fetchProducts, removeCartLine, shopifyConfigured, updateCartLine } from '../services/shopify'
+import { addCartLine, addDeliveryAddress, fetchProducts, removeCartLine, shopifyConfigured, updateCartLine } from '../services/shopify'
 
 const StoreContext = createContext(null)
 const CART_KEY = 'threadly-cart-v1'
@@ -148,16 +148,32 @@ export function StoreProvider({ children }) {
       : [...current, product])
   }
 
-  const checkout = () => {
-    if (shopifyConfigured) {
-      if (!cart.checkoutUrl) {
-        setCartError('Your Shopify checkout is not available yet. Try refreshing the cart.')
-        return false
-      }
-      window.location.assign(cart.checkoutUrl)
-      return true
+  const checkout = async (address) => {
+    setCartError('')
+    if (!shopifyConfigured) {
+      setCartError('Checkout is unavailable because Shopify is not configured. Set the Storefront API domain and public access token in .env.local.')
+      return false
     }
-    return false
+    if (!cart.id) {
+      setCartError('Your Shopify cart is not available. Please refresh the page and try again.')
+      return false
+    }
+    setCartBusy(true)
+    try {
+      const updatedCart = await addDeliveryAddress(cart.id, address)
+      setCart((current) => ({
+        ...current,
+        id: updatedCart.id,
+        checkoutUrl: updatedCart.checkoutUrl,
+      }))
+      window.location.assign(updatedCart.checkoutUrl)
+      return true
+    } catch (error) {
+      setCartError(error.message)
+      return false
+    } finally {
+      setCartBusy(false)
+    }
   }
 
   const value = useMemo(() => ({

@@ -6,6 +6,7 @@ import Shop from './pages/Shop'
 import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
 import Wishlist from './pages/Wishlist'
+import NotFound from './pages/NotFound'
 import { About, Contact, FAQ, Returns, Shipping } from './pages/InfoPages'
 
 function ScrollToTop() {
@@ -32,7 +33,7 @@ export default function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/returns" element={<Returns />} />
-          <Route path="*" element={<Shop />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </>

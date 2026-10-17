@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, Check, Heart, Minus, Plus, ShoppingBag } from 'lucide-react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import ProductGrid from '../components/ProductGrid'
 
@@ -8,7 +8,6 @@ const price = (amount, currency) => new Intl.NumberFormat('en-IN', { style: 'cur
 
 export default function ProductDetails() {
   const { id } = useParams()
-  const navigate = useNavigate()
   const { products, productsLoading, productsError, addItem, cartBusy, cartError, wishlist, toggleWishlist, isShopifyConfigured } = useStore()
   const product = products.find((item) => item.id === id)
   const [selectedSize, setSelectedSize] = useState('')
@@ -17,6 +16,7 @@ export default function ProductDetails() {
   const [activeImage, setActiveImage] = useState(0)
   const [added, setAdded] = useState(false)
   const [formError, setFormError] = useState('')
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false)
   if (productsLoading) return <div className="empty-state product-loading"><span className="loading-spinner" /><h2>Loading this piece...</h2></div>
   if (productsError) return <div className="empty-state product-loading"><h2>We couldn't load this piece.</h2><p className="inline-error">{productsError}</p><Link to="/shop" className="underlined-link">BACK TO SHOP</Link></div>
   if (!product) return <div className="empty-state product-loading"><h2>That piece has moved on.</h2><Link to="/shop" className="underlined-link">BACK TO SHOP <ArrowRight size={16} /></Link></div>
@@ -26,6 +26,7 @@ export default function ProductDetails() {
   const colors = product.colors?.length ? product.colors : [product.color || 'Default']
   const color = selectedColor || colors[0]
   const matchingVariant = (size, selectedColorValue) => product.variants?.find((variant) => variant.size === size && variant.color === selectedColorValue)
+  const selectedVariant = matchingVariant(selectedSize, color)
   const unavailable = product.variants?.filter((variant) => !variant.availableForSale && variant.color === color).map((variant) => variant.size) || []
   const submit = async () => {
     if (!selectedSize) { setFormError('Pick your size first.'); return }
@@ -46,17 +47,19 @@ export default function ProductDetails() {
         <div className="product-detail-info">
           <span className="eyebrow">{product.category || 'DISTANT FORM MEN’S TEES'}</span>
           <div className="detail-title-line"><h1>{product.title}</h1><button className={`detail-heart ${saved ? 'is-saved' : ''}`} aria-label="Toggle wishlist" onClick={() => toggleWishlist(product)}><Heart size={20} fill={saved ? 'currentColor' : 'none'} /></button></div>
-          <div className="detail-price-line"><strong>{price(product.price, isShopifyConfigured ? product.currencyCode : 'INR')}</strong>{product.compareAt && <del>{price(product.compareAt, 'INR')}</del>}</div>
+          <div className="detail-price-line"><strong>{price(selectedVariant?.price ?? product.price, isShopifyConfigured ? product.currencyCode : 'INR')}</strong>{product.compareAt && <del>{price(product.compareAt, 'INR')}</del>}</div>
           <div className="detail-divider" />
           <p className="detail-description">{product.description}</p>
           <div className="color-choice"><div className="selection-label">COLOR <span>{color}</span></div><div className="color-options">{colors.map((option) => <button type="button" key={option} className={`color-swatch-button ${color === option ? 'selected' : ''}`} onClick={() => { setSelectedColor(option); setSelectedSize(''); setFormError('') }} aria-label={`Choose ${option}`} aria-pressed={color === option}><span className="color-swatch" style={{ backgroundColor: option === product.color ? product.colorHex : '#d8d8d3' }} /></button>)}</div></div>
           <div className="size-choice">
-            <div className="selection-label">SELECT SIZE <button type="button" onClick={() => setFormError('Our fit is relaxed. If you like a closer fit, size down.')}>SIZE GUIDE</button></div>
+            <div className="selection-label">SELECT SIZE <button type="button" aria-expanded={sizeGuideOpen} aria-controls="size-guide-panel" onClick={() => setSizeGuideOpen(!sizeGuideOpen)}>SIZE GUIDE</button></div>
             <div className="size-options">{sizes.map((size) => {
               const variant = matchingVariant(size, color)
               const soldOut = unavailable.includes(size) || (product.variants && !variant)
               return <button type="button" key={size} disabled={soldOut} onClick={() => { setSelectedSize(size); setFormError('') }} className={`${selectedSize === size ? 'selected' : ''} ${soldOut ? 'sold-out' : ''}`}>{size}</button>
             })}</div>
+            {sizeGuideOpen && <div id="size-guide-panel" className="size-guide-panel"><strong>RELAXED EVERYDAY FIT</strong><p>Choose your usual size for the intended fit, or size down for a closer fit. For exact garment measurements, refer to the product information supplied by the store.</p></div>}
+            {product.variants && selectedSize && <p className={`availability-note ${selectedVariant?.availableForSale ? 'is-available' : 'is-unavailable'}`}>{selectedVariant?.availableForSale ? 'AVAILABLE' : 'CURRENTLY UNAVAILABLE'}{selectedColor ? ` · ${selectedColor}` : ''} / {selectedSize}</p>}
           </div>
           <div className="add-row">
             <div className="quantity-selector"><button type="button" aria-label="Decrease quantity" onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus size={14} /></button><span>{quantity}</span><button type="button" aria-label="Increase quantity" onClick={() => setQuantity(Math.min(10, quantity + 1))}><Plus size={14} /></button></div>

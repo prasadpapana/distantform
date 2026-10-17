@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import ProductGrid from '../components/ProductGrid'
+import RevealOnScroll from '../components/RevealOnScroll'
 import { bestSellers, categories, newArrivals } from '../data/products'
 import { useStore } from '../context/StoreContext'
 
@@ -11,20 +12,25 @@ export default function Home() {
   const shopCategories = [...new Set((products.length ? products : categories.slice(1).map((category, index) => ({ category, id: index }))).map((product) => typeof product === 'string' ? product : product.category))].slice(0, 2)
   return (
     <>
-      <section className="hero">
-        <img className="hero-image" src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=2200&q=90" alt="Streetwear collection in a sunlit city" />
+      <section className="hero hero-spotlight">
+        <img className="hero-image" src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=2200&q=90" alt="Men's streetwear in a sunlit city" />
         <div className="hero-shade" />
+        <div className="spotlight-wash" aria-hidden="true" />
         <div className="hero-content">
-          <div className="eyebrow hero-eyebrow"><span className="eyebrow-mark">✳</span> DISTANT FORM — MEN’S EVERYDAY TEES</div>
-          <h1>T-Shirts<br />That <span>Speak.</span></h1>
-          <p>For the ones who never needed<br />to say too much.</p>
-          <Link to="/shop" className="button button-blue">SHOP THE COLLECTION <ArrowUpRight size={17} /></Link>
+          <div className="eyebrow hero-eyebrow"><span className="eyebrow-mark">✳</span> MEN’S T-SHIRTS — MADE TO BE WORN</div>
+          <h1 className="hero-wordmark" aria-label="Distant Form"><span>DISTANT</span><span>FORM<span className="hero-period">.</span></span></h1>
+          <p>Considered essentials.<br />A point of view all your own.</p>
+          <Link to="/shop" className="button button-light">SHOP T-SHIRTS <ArrowUpRight size={17} /></Link>
         </div>
-        <div className="hero-note">01 / 04 <span className="hero-note-line" /> A NEW KIND OF EVERYDAY</div>
+        <div className="floating-tee" aria-hidden="true">
+          <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=700&q=85" alt="" />
+          <span>THE EVERYDAY TEE <i>01 / DF</i></span>
+        </div>
+        <div className="hero-note">DISTANT FORM <span className="hero-note-line" /> INDIA / EVERYWHERE</div>
         <a className="hero-scroll" href="#collection"><ArrowDown size={16} /> SCROLL TO EXPLORE</a>
       </section>
 
-      <section className="category-section section-shell" id="collection">
+      <RevealOnScroll as="section" className="category-section section-shell" id="collection">
         <div className="section-heading"><div><span className="eyebrow">A GOOD PLACE TO START</span><h2>Find your <span>kind.</span></h2></div><Link to="/shop" className="underlined-link">SHOP EVERYTHING <ArrowRight size={16} /></Link></div>
         <div className="category-grid">
           {shopCategories.map((category, index) => (
@@ -38,26 +44,26 @@ export default function Home() {
             <span className="category-index">03 / 03</span>
           </Link>
         </div>
-      </section>
+      </RevealOnScroll>
 
-      <section className="products-section section-shell section-dark">
+      <RevealOnScroll as="section" className="products-section section-shell section-dark">
         <div className="section-heading"><div><span className="eyebrow">THE PEOPLE HAVE SPOKEN</span><h2>Most <span>loved.</span></h2></div><Link to="/shop" className="underlined-link">SHOP BESTSELLERS <ArrowRight size={16} /></Link></div>
         {productsLoading ? <p className="loading-note">Finding your new favorites...</p> : productsError ? <div className="inline-error">{productsError}</div> : <ProductGrid products={featured.slice(0, 4)} />}
-      </section>
+      </RevealOnScroll>
 
-      <section className="manifesto">
+      <RevealOnScroll as="section" className="manifesto">
         <span className="eyebrow">NOT JUST ANOTHER TEE</span>
         <h2>Made for the<br /><span>in-between.</span></h2>
         <p>The coffee run. The long way home.<br />The plans that turn into stories.</p>
         <Link to="/about" className="button button-dark">GET TO KNOW US <ArrowUpRight size={17} /></Link>
         <div className="manifesto-stamp">DISTANT FORM<br /><span>MEN’S TEES. EVERY DAY.</span></div>
-      </section>
+      </RevealOnScroll>
 
-      <section className="products-section section-shell arrivals-section">
+      <RevealOnScroll as="section" className="products-section section-shell arrivals-section">
         <div className="section-heading"><div><span className="eyebrow">FRESH OFF THE PRESS</span><h2>Just <span>dropped.</span></h2></div><Link to="/shop" className="underlined-link">SEE WHAT'S NEW <ArrowRight size={16} /></Link></div>
         {productsLoading ? <p className="loading-note">Loading the latest drop...</p> : <ProductGrid products={fresh.slice(0, 4)} />}
-      </section>
-      <section className="quote-strip"><span className="blue-star">✳</span><p>“Finally, a tee that gets me.”</p><span>THE DISTANT FORM COMMUNITY</span></section>
+      </RevealOnScroll>
+      <RevealOnScroll as="section" className="quote-strip"><span className="blue-star">✳</span><p>“Finally, a tee that gets me.”</p><span>THE DISTANT FORM COMMUNITY</span></RevealOnScroll>
     </>
   )
 }

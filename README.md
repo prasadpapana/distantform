@@ -23,11 +23,13 @@ Copy `.env.example` to `.env.local` and fill in:
 
 - `VITE_SHOPIFY_STORE_DOMAIN`: the permanent `your-store.myshopify.com` domain (no protocol).
 - `VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN`: a public Storefront API access token created for your Shopify storefront.
-- `VITE_SHOPIFY_API_VERSION`: a supported Storefront API version, default example `2025-01`.
+- `VITE_SHOPIFY_API_VERSION`: a supported Storefront API version, default example `2026-10`.
 
 Restart the Vite server after changing environment variables. The frontend uses Shopify's **Storefront API only** for product/variant listing, cart creation and line changes, and checkout URL generation. Shopify Storefront tokens are browser-visible by design; never place a Shopify Admin API access token or other private credential in a `VITE_` variable. The app checks whether the Shopify configuration is present; without it, the sample catalog and browser-persisted demo cart are used. With it, API failures are shown in the UI rather than silently switching to demo behavior.
 
 Tag each men's T-shirt in Shopify with the exact product tag `mens-t-shirt` so it appears in this storefront. Keep Shopify product options named `Size` and `Color` (or `Colour`) to populate the separate selectors and cart variant accurately. Other products are intentionally excluded.
+
+The cart includes a guest shipping form. It validates required Indian address fields, an Indian 10-digit mobile number, and a six-digit PIN. With a configured Shopify Storefront API, the address is submitted over HTTPS to Shopify's `cartDeliveryAddressesAdd` mutation as the selected, one-time-use delivery address, then the customer is sent to Shopify-hosted checkout. The address is held only in page memory and is not written to local storage. Without Shopify configuration, checkout is blocked with an explanation; the app does not claim an order was created. Test the address prefill and completed order in your own Shopify checkout before launch.
 
 Shopify checkout is not a payment processor configured by this app. Real checkout depends on a configured Shopify store, products, shipping/tax settings, and payment provider. Test Shopify checkout end-to-end in your own store before accepting real orders.
 

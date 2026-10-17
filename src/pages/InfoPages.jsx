@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ArrowRight, ArrowUpRight, Instagram, Mail, MapPin } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import RevealOnScroll from '../components/RevealOnScroll'
 
 function PageIntro({ eyebrow, title, copy }) {
   return <div className="info-hero"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{copy}</p></div>
@@ -10,9 +11,9 @@ export function About() {
   return (
     <div className="info-page">
       <PageIntro eyebrow="A LITTLE ABOUT US" title={<>We believe in<br /><span>the everyday.</span></>} copy="The best things aren't always the loudest. Sometimes they're just the ones you reach for, again and again." />
-      <section className="about-story section-shell"><div className="about-image"><img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=1300&q=85" alt="Man wearing a graphic T-shirt" /></div><div className="about-copy"><span className="eyebrow">THE DISTANT FORM IDEA</span><h2>Less noise.<br /><span>More you.</span></h2><p>DISTANT FORM started with a simple thought: what if the tee you wore on an ordinary Tuesday felt like the best thing in your wardrobe?</p><p>So we made the essentials we couldn't find—considered shapes, quality you can feel, and just enough character to say something without saying too much.</p><p>Designed in India. Made for wherever the day takes you.</p><Link to="/shop" className="underlined-link">MEET YOUR NEW FAVORITE <ArrowRight size={16} /></Link></div></section>
-      <section className="values-strip"><div><span>01</span><h3>GOOD BY DESIGN</h3><p>Thoughtful details. Nothing extra for the sake of it.</p></div><div><span>02</span><h3>MADE TO REPEAT</h3><p>Comfort that gets better with every wear.</p></div><div><span>03</span><h3>ALWAYS YOURS</h3><p>Easy pieces that let you be the whole point.</p></div></section>
-      <section className="about-bottom"><span className="blue-star">✳</span><p>It's not about dressing up.<br /><strong>It's about showing up as you.</strong></p><Link to="/shop" className="button button-blue">SHOP DISTANT FORM <ArrowUpRight size={16} /></Link></section>
+      <RevealOnScroll as="section" className="about-story section-shell"><div className="about-image"><img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=1300&q=85" alt="Man wearing a graphic T-shirt" /></div><div className="about-copy"><span className="eyebrow">THE DISTANT FORM IDEA</span><h2>Less noise.<br /><span>More you.</span></h2><p>DISTANT FORM started with a simple thought: what if the tee you wore on an ordinary Tuesday felt like the best thing in your wardrobe?</p><p>So we made the essentials we couldn't find—considered shapes, quality you can feel, and just enough character to say something without saying too much.</p><p>Designed in India. Made for wherever the day takes you.</p><Link to="/shop" className="underlined-link">MEET YOUR NEW FAVORITE <ArrowRight size={16} /></Link></div></RevealOnScroll>
+      <RevealOnScroll as="section" className="values-strip"><div><span>01</span><h3>GOOD BY DESIGN</h3><p>Thoughtful details. Nothing extra for the sake of it.</p></div><div><span>02</span><h3>MADE TO REPEAT</h3><p>Comfort that gets better with every wear.</p></div><div><span>03</span><h3>ALWAYS YOURS</h3><p>Easy pieces that let you be the whole point.</p></div></RevealOnScroll>
+      <RevealOnScroll as="section" className="about-bottom"><span className="blue-star">✳</span><p>It's not about dressing up.<br /><strong>It's about showing up as you.</strong></p><Link to="/shop" className="button button-light">SHOP DISTANT FORM <ArrowUpRight size={16} /></Link></RevealOnScroll>
     </div>
   )
 }
